@@ -27,7 +27,7 @@ python urlmodel.py compare --filepath "<path where the data is stored>" --n 1000
 ```
 The results of the model will be stored in the filepath you passed. 
 
----- Sample commands ---
+### Sample Commands
 
 cd \<folder-with-the-python-code\>
 
