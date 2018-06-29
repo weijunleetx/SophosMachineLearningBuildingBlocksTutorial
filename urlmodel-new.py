@@ -122,6 +122,11 @@ def construct_model(model_type):
         model.add(Activation('relu'))
         model.add(Dropout(.15))
         
+        model.add(Dense(128)) 
+        model.add(BatchNormalization())
+        model.add(Activation('relu'))
+        model.add(Dropout(.15))
+
         model.add(Dense(64))
         model.add(BatchNormalization())
         model.add(Activation('relu'))
@@ -132,6 +137,11 @@ def construct_model(model_type):
         model.add(Activation('relu'))
         model.add(Dropout(.15))
     	
+        model.add(Dense(32))
+        model.add(BatchNormalization())
+        model.add(Activation('relu'))
+        model.add(Dropout(.15))
+
         model.add(Dense(32))
         model.add(BatchNormalization())
         model.add(Activation('relu'))
@@ -181,26 +191,32 @@ def compare(filepath, n):
     X_train = X_train.reshape(X_train.shape[0], X_train.shape[2])
     X_test = X_test.reshape(X_test.shape[0], X_test.shape[2])
 
-    log.info("Try a deep model with time-split data ...")
-    results_path = os.path.join(filepath, "deepmodel_timesplit")
-    results(X_train, y_train, X_test, y_test, cv, 'deep', results_path)
-    
+    log.info(" ")
     log.info("Try a shallow model with time-split data ...")
     results_path = os.path.join(filepath, "shallowmodel_timesplit")
-    results(X_train, y_train, X_test, y_test, cv, 'shallow', results_path)
+    get_results(X_train, y_train, X_test, y_test, cv, 'shallow', results_path)
 
+    log.info(" ")
+    log.info("Try a deep model with time-split data ...")
+    results_path = os.path.join(filepath, "deepmodel_timesplit")
+    get_results(X_train, y_train, X_test, y_test, cv, 'deep', results_path)
+    
+    log.info(" ")
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=3)
     X_train = X_train.reshape(X_train.shape[0], X_train.shape[2])
     X_test = X_test.reshape(X_test.shape[0], X_test.shape[2])
 
-    log.info("Try a deep model with random-split data ...")
-    results_path = os.path.join(filepath, "deepmodel_randsplit")
-    results(X_train, y_train, X_test, y_test, 1, 'deep', results_path)
-
+    log.info(" ")
     log.info("Try a shallow model with random-split data ...")
     results_path = os.path.join(filepath, "shallowmodel_randsplit")
-    results(X_train, y_train, X_test, y_test, 1, 'shallow', results_path)
+    get_results(X_train, y_train, X_test, y_test, 1, 'shallow', results_path)
+
+    log.info(" ")
+    log.info("Try a deep model with random-split data ...")
+    results_path = os.path.join(filepath, "deepmodel_randsplit")
+    get_results(X_train, y_train, X_test, y_test, 1, 'deep', results_path)
  
+    log.info(" ")
     plot_all(filepath)
     log.info("Done!")
 
@@ -208,7 +224,7 @@ def compare(filepath, n):
 def find_nearest(array,value):
     return (np.abs(array-value)).argmin()
 
-def results(X_train, y_train, X_test, y_test, cv, model_type, filepath):
+def get_results(X_train, y_train, X_test, y_test, cv, model_type, filepath):
     
     if not os.path.exists(filepath):
         os.makedirs(filepath)     
@@ -258,7 +274,6 @@ def results(X_train, y_train, X_test, y_test, cv, model_type, filepath):
     results['fpr_1e4'] = counts(y_test, y_pred2)
     results['roc'] = np.column_stack((fpr, tpr, thresh)).tolist()
     results['auc'] = np.array([curr_auc]).tolist()
-
     
     log.info("AUC = "+str(results['auc']))
 
@@ -307,7 +322,7 @@ def counts(actual, preds):
     return np.column_stack((tp, fp, tn, fn)).tolist()
 
 def plot_all(filepath):
-    log.info("Plotting all results...")
+    log.info("\nPlotting all results...")
     plt.plot(np.logspace(-10,0, 3000), np.logspace(-10,0, 3000), 'k--')
     plt.xlim([0,1.0])
     plt.ylim([0, 1.0])
