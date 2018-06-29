@@ -49,11 +49,11 @@ def get_data(filepath, n):
         n = len(dirty)
         log.info("Max dirty urls = " + str(len(dirty)))
     
-    # Take some dirty samples
+    # Take n  samples out of all dirty data
     dirty = dirty.sample(n)
     log.info("Dirty samples: "+ str(n))
     
-    # There are a lot more clean samples to way
+    # Use more clean samples to train the model
     c = n*7
     clean = clean.sample(c)
     log.info("Clean samples: "+ str(c))
@@ -91,7 +91,7 @@ def get_data(filepath, n):
 # This function will take the 3 n-gram of the url and hash it into a vector of length 3000
 def eng_hash(data, vdim=3000):
     final = []
-    for url in data:`
+    for url in data:
         v = [0] * vdim
         new = list(ngrams(url, 3))
         for i in new:
@@ -181,9 +181,11 @@ def compare(filepath, n):
     X_train = X_train.reshape(X_train.shape[0], X_train.shape[2])
     X_test = X_test.reshape(X_test.shape[0], X_test.shape[2])
 
+    log.info("Try a deep model with time-split data ...")
     results_path = os.path.join(filepath, "deepmodel_timesplit")
     results(X_train, y_train, X_test, y_test, cv, 'deep', results_path)
     
+    log.info("Try a shallow model with time-split data ...")
     results_path = os.path.join(filepath, "shallowmodel_timesplit")
     results(X_train, y_train, X_test, y_test, cv, 'shallow', results_path)
 
@@ -191,9 +193,11 @@ def compare(filepath, n):
     X_train = X_train.reshape(X_train.shape[0], X_train.shape[2])
     X_test = X_test.reshape(X_test.shape[0], X_test.shape[2])
 
+    log.info("Try a deep model with random-split data ...")
     results_path = os.path.join(filepath, "deepmodel_randsplit")
     results(X_train, y_train, X_test, y_test, 1, 'deep', results_path)
-    
+
+    log.info("Try a shallow model with random-split data ...")
     results_path = os.path.join(filepath, "shallowmodel_randsplit")
     results(X_train, y_train, X_test, y_test, 1, 'shallow', results_path)
  
