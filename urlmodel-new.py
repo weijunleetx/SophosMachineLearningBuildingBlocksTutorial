@@ -201,7 +201,6 @@ def compare(filepath, n):
     results_path = os.path.join(filepath, "deepmodel_timesplit")
     get_results(X_train, y_train, X_test, y_test, cv, 'deep', results_path)
     
-    log.info(" ")
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=3)
     X_train = X_train.reshape(X_train.shape[0], X_train.shape[2])
     X_test = X_test.reshape(X_test.shape[0], X_test.shape[2])
@@ -322,7 +321,7 @@ def counts(actual, preds):
     return np.column_stack((tp, fp, tn, fn)).tolist()
 
 def plot_all(filepath):
-    log.info("\nPlotting all results...")
+    log.info("Plotting all results...")
     plt.plot(np.logspace(-10,0, 3000), np.logspace(-10,0, 3000), 'k--')
     plt.xlim([0,1.0])
     plt.ylim([0, 1.0])
