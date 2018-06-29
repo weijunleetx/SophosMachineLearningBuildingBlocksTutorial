@@ -30,5 +30,8 @@ The results of the model will be stored in the filepath you passed.
 ---- Sample commands ---
 
 cd \<folder-with-the-python-code\>
+
 python urlmodel-new.py compare --filepath data-new --n 100000
+
+
 
